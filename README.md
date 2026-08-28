@@ -1,65 +1,76 @@
 # LocalFloatAI
 
-**LocalFloatAI** ay isang maliit, floating, always-on-top Windows desktop assistant na gumagamit ng lokal na `.gguf` model. Ang inference ay tumatakbo sa sariling PC at hindi nangangailangan ng cloud API pagkatapos mailagay ang model file.
+**LocalFloatAI** is a compact, floating, always-on-top Windows desktop assistant created by a Filipino developer/user. It runs a local `.gguf` language model on the user's own computer and is designed for offline use after the model runtime and files are available.
 
-## Kasalukuyang feature set
+## Features
 
 | Feature | Behavior |
 |---|---|
-| Floating chatbox | Compact, transparent, movable, adjustable opacity, at always-on-top |
-| Offline GGUF | May **Import GGUF** button para pumili ng `.gguf` mula sa anumang local folder, flash drive, o custom path |
-| Adaptive hardware | Awtomatikong bumabasa ng OS, x64 architecture, RAM, CPU cores, screen size, at scaling |
-| CPU tuning | Awtomatikong pumipili ng conservative threads, context size, batch size, at zero GPU layers |
-| Strict output | Walang greeting, preamble, filler, o “here is the code”; code-only kapag code ang hiningi |
-| Ask mode | Optional normal concise Q&A behavior |
-| Global dot key | Ang `.` key ay nagse-send ng request kapag naka-enable ang toggle |
-| U key selection | Kinokopya ang selected text/code mula sa active app at ipinapadala ito sa Continue o Fix Code action |
-| Paste mode | Kinokopya ang sagot at awtomatikong nagta-`Ctrl+V` sa kasalukuyang app |
-| Type mode | Tina-type ang sagot sa kasalukuyang app gamit ang OS keyboard events |
-| Local API | OpenAI-compatible endpoint sa `127.0.0.1:8765` |
+| Floating chatbox | Compact, transparent, movable, adjustable opacity, and always-on-top. |
+| External GGUF import | Use **Import GGUF** to select a `.gguf` file from any local folder, drive, or flash drive. The model is not bundled into the executable. |
+| Adaptive hardware detection | Detects the operating system, x64 architecture, RAM, CPU cores, display size, and scaling. |
+| CPU tuning | Selects conservative thread, context, and batch settings for the detected hardware and model size. GPU layers are disabled for CPU-only compatibility. |
+| Strict output | Returns the requested result without greetings, preambles, filler, or unnecessary explanations. Code requests return code only. |
+| Ask mode | Optional concise conversational behavior. |
+| Period new-request workflow | Select a complete request in another application, press `.`, and the app copies the request before generating the answer. |
+| Custom selection key | Select code or text, press the configurable key from Settings, and choose `fix` or `continue`. |
+| Paste mode | Copies the response and automatically pastes it into the previously active application. |
+| Type mode | Types the response through Windows keyboard events, with clipboard fallback for Unicode text. |
+| Screen OCR | Reads screen text only. The floating GUI is temporarily hidden during capture so its own text is not included. |
+| Local API | Provides an OpenAI-compatible API at `127.0.0.1:8765`. |
 
 ## Requirements
 
-Ang Windows build ay para sa **Windows 10/11 x64** at nangangailangan ng Python 3.11 o mas bago para sa source mode. Para sa PC na may 8 GB RAM, mas praktikal ang maliit o medium quantized GGUF model. Ang aktuwal na bilis at memory use ay nakadepende sa model size at sa hardware.
+The compiled build targets **Windows 10/11 x64**. Source mode requires Python 3.11 or newer. A smaller or medium quantized GGUF model is recommended for computers with 8 GB of RAM. Actual speed and memory use depend on the selected model and the target hardware.
 
-> Hindi kasama ang GGUF model sa source package. Ang model ay kailangang ilagay ng user sa `models/` dahil ang assistant ay idinisenyo para sa lokal at offline na paggamit.
+> The GGUF model is intentionally external. Select it through **Import GGUF**, or place it in the `models/` folder for automatic discovery.
 
-## Quick start mula sa source
+## Quick start
 
-1. I-install ang 64-bit Python 3.11+ sa Windows kung source mode ang gagamitin, o buksan ang compiled EXE.
-2. I-double-click ang `run_windows.bat` o ang compiled `LocalFloatAI.exe`.
-3. Pindutin ang **Import GGUF**, pumili ng `.gguf` mula sa kahit anong folder o flash drive, at hintayin ang automatic load.
-4. Pagkatapos ma-load, ipadala ang prompt gamit ang `Send .`, Enter, o global `.` key.
+1. Extract the portable package or start the compiled `LocalFloatAI.exe`.
+2. Click **Import GGUF**, select your `.gguf` file, and wait for the model to load.
+3. Choose `paste` or `type` output mode.
+4. Use the floating chatbox for ordinary requests, or use the keyboard workflows below.
 
-Hindi kinakailangang ilipat o kopyahin ang GGUF sa tabi ng EXE. Naka-save ang napiling external path sa `config.json` at maaaring palitan anumang oras gamit ang **Import GGUF** button. Kapag walang manually imported model, saka lamang mag-a-auto-select ang app mula sa `models/` folder.
+The selected GGUF path is saved in `config.json`. The model does not need to be moved beside the executable and can remain on another drive or on a flash drive.
 
-## Selected text o code gamit ang U key
+## New request with the period key
 
-1. Sa Notepad, code editor, browser, o ibang app, i-highlight ang text o code.
-2. Pindutin ang **U**. Awtomatikong mag-`Ctrl+C` ang app at babasahin ang clipboard contents; hindi ilalagay ang U sa selected text.
-3. Piliin sa floating box ang `fix` para ibalik ang kumpletong corrected code, o `continue` para ipagpatuloy ang selected code/text mula sa dulo.
-4. Gagamitin ng app ang napiling paste o type mode para ibalik ang result sa dating active window. Ang strict output ay result-only at walang Markdown fences.
+To send a new request without manually typing it into the floating chatbox, write the complete request in Notepad or another editor, select the request, and press the period (`.`) key. LocalFloatAI copies the complete selection, sends it to the local model, and pastes or types the result into the previously active application.
 
-## Paano gamitin ang output
+The **Global dot** toggle controls this behavior. Turn it off when you need to type a normal period without triggering a request. The Enter key and the **Send .** button remain available from the chatbox.
 
-Piliin ang `paste` kung nais mong awtomatikong ilagay ang sagot sa Notepad, editor, browser field, o ibang aktibong application. Piliin ang `type` kung nais mong dumaan ang sagot bilang simulated keyboard typing. Sa type mode, ang Unicode text ay awtomatikong gumagamit ng clipboard fallback kapag hindi maipadala bilang direct keyboard event.
+## Fix or continue selected code/text
 
-Kapag ginagamit ang `.` bilang send key sa ibang app, ang toggle na **Global dot** ang kumokontrol kung naka-capture ito. I-off ito kapag kailangan mong mag-type ng normal na period nang hindi nagsi-send ng prompt. Ang Escape key ay nagtatago ng floating window.
+1. Select the complete code or text in Notepad, an editor, a browser field, or another application.
+2. Open Settings and assign a custom selected-text key.
+3. Choose `fix` to receive the complete corrected code, or choose `continue` to continue the selected text/code from its endpoint.
+4. Press the custom key. The app copies the selection first and suppresses the trigger key, so the trigger character is not inserted into the selected content.
+5. LocalFloatAI returns the full response using the selected paste or type mode.
 
-## Build ng Windows EXE
+## Screen OCR
 
-I-double-click ang `build_windows.bat`. Gumagawa ito ng `.venv`, nag-i-install ng dependencies, at nagbu-build ng portable folder:
+Click **Screen OCR** to capture text visible on the desktop. The floating LocalFloatAI window is hidden briefly while the screenshot is taken, which prevents the assistant's own GUI text from entering the OCR result. The window is restored after capture. The extracted text is copied to the clipboard and retained as context for the next AI request.
+
+Screen OCR is text extraction only. It does not perform image understanding or describe non-text objects.
+
+## Output cleanup
+
+Strict result delivery removes Markdown code fences and common introductory filler such as `Here is the code:` before a response is pasted or typed. Quotes, punctuation, and syntax that are part of the requested code are preserved.
+
+## Build the Windows executable from source
+
+Run `build_windows.bat` on Windows. The script creates a virtual environment, installs dependencies, and builds a portable executable. The generated executable is placed at:
 
 ```text
-dist\LocalFloatAI\LocalFloatAI.exe
-dist\LocalFloatAI\models\
+dist\LocalFloatAI.exe
 ```
 
-Ilagay ang `.gguf` file sa `dist\LocalFloatAI\models\` pagkatapos ng build. Ang output ay one-folder build upang madaling maisama ang native llama.cpp libraries at maiwasan ang dependency issues ng single-file executable.
+The portable release package also includes the OCR runtime beside the executable. Copy the complete portable folder to a flash drive when moving the application between Windows x64 computers. Do not copy a GGUF model unless you want the model on the same drive; it can be imported from any other accessible location.
 
 ## Local API
 
-Ang API ay nagsisimula kasama ng desktop app:
+The API starts with the desktop application and binds to loopback by default:
 
 ```text
 GET  http://127.0.0.1:8765/health
@@ -67,7 +78,7 @@ GET  http://127.0.0.1:8765/v1/models
 POST http://127.0.0.1:8765/v1/chat/completions
 ```
 
-Halimbawa gamit ang PowerShell:
+Example using PowerShell:
 
 ```powershell
 $body = @{
@@ -84,7 +95,7 @@ Invoke-RestMethod `
   -Body $body
 ```
 
-Halimbawa gamit ang Python client:
+Example using the OpenAI Python client:
 
 ```python
 from openai import OpenAI
@@ -101,29 +112,39 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-Ang API ay naka-bind sa loopback address lamang bilang default, kaya ang ibang devices sa network ay hindi makaka-access maliban kung sadyang babaguhin ang `host` sa `config.json`.
+The API is bound to the loopback address by default. Other devices on the network cannot access it unless the `host` value is intentionally changed in `config.json`.
 
 ## Configuration
 
-Ang `config.json` ay awtomatikong ginagawa mula sa `config.example.json`. Mahahalagang setting:
+`config.json` is created automatically from `config.example.json`. Important settings include:
 
-| Key | Default | Gamit |
+| Key | Default | Description |
 |---|---:|---|
-| `model_path` | empty | External GGUF path; itinatakda rin ito ng Import GGUF button |
-| `host` | `127.0.0.1` | Local API bind address |
-| `port` | `8765` | Local API port |
-| `opacity` | `0.94` | Floating window opacity |
-| `always_on_top` | `true` | Laging nasa ibabaw ng ibang windows |
-| `capture_dot` | `true` | Global period/dot send key |
-| `output_mode` | `paste` | `paste` o `type` |
-| `strict_mode` | `true` | Result-only response behavior |
-| `ask_mode` | `false` | Concise conversational behavior |
-| `capture_u_key` | `true` | Enable selected-text capture |
-| `selection_key` | `u` | Custom selected-text trigger; set it in Settings |
-| `selection_action` | `fix` | `fix` for corrected code or `continue` for continuation |
+| `model_path` | empty | External GGUF path; also set by **Import GGUF**. |
+| `host` | `127.0.0.1` | Local API bind address. |
+| `port` | `8765` | Local API port. |
+| `opacity` | `0.94` | Floating window opacity. |
+| `always_on_top` | `true` | Keep the floating window above other windows. |
+| `capture_dot` | `true` | Enable the period-key new-request workflow. |
+| `output_mode` | `paste` | `paste` or `type`. |
+| `strict_mode` | `true` | Result-only response behavior. |
+| `ask_mode` | `false` | Concise conversational behavior. |
+| `capture_u_key` | `true` | Enable selected-text capture. |
+| `selection_key` | `u` | Custom selected-text trigger; assign it in Settings. |
+| `selection_action` | `fix` | `fix` for corrected code or `continue` for continuation. |
 
-Sa **Settings**, i-click ang field na **Selected-text custom key**, pindutin ang gusto mong isang key, at i-click ang **Save**. Puwedeng gumamit ng `U`, `F8`, `Home`, `Up`, `Space`, o ibang key na kinikilala ng Windows keyboard hook. Ang bagong key ay nire-rebind agad at sine-save sa `config.json`.
+In **Settings**, click **Selected-text custom key**, press the desired key, and click **Save**. The new key is rebound immediately and saved to `config.json`.
 
-## Important safety behavior
+## Safety and privacy
 
-Ang paste at type mode ay sumusulat sa kasalukuyang active application. Bago pindutin ang send key, siguraduhing tama ang target window. Ang global hotkey ay maaaring mangailangan ng Windows permission depende sa system policy. Kung hindi gumana ang dot hook, puwedeng gamitin ang Enter o ang `Send .` button.
+Paste and type modes write into the currently active application. Confirm the target window before using a keyboard workflow. The global keyboard hook may require Windows permission depending on system policy. The model, prompts, OCR results, and API requests remain local unless you intentionally configure another service or network bind address.
+
+## Creator note
+
+LocalFloatAI was created by a Filipino developer/user as a practical offline desktop tool for local GGUF models, code fixing, code continuation, screen text capture, and reusable localhost integration.
+
+## License
+
+No separate open-source license has been selected yet. Until a license is added, treat the repository as private and use the code only under the repository owner's authorization.
+
+The project intentionally excludes GGUF model files, local `config.json`, secrets, and generated build artifacts from the source repository.

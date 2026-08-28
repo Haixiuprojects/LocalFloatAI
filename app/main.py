@@ -741,7 +741,7 @@ class FloatingAI:
             return
         selected = Path(path).expanduser().resolve()
         if selected.suffix.lower() != ".gguf":
-            messagebox.showerror("Invalid model", "Pumili ng .gguf model file.")
+            messagebox.showerror("Invalid model", "Please select a .gguf model file.")
             return
         self.engine.set_model_path(selected)
         self.set_status(f"Imported: {selected.name}; loading…")
