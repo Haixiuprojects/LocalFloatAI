@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+build/*.log
+dist/
+config.json
+models/*.gguf
+
+ocr/
+LocalFloatAI-portable*
+*.zip

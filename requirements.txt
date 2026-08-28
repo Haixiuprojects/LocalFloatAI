@@ -1,0 +1,14 @@
+# Tested target: Windows 10/11 x64, Python 3.11+
+llama-cpp-python>=0.3.0
+numpy>=1.26,<2
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.7.0
+psutil>=6.0.0
+pyperclip>=1.9.0
+keyboard>=0.13.5
+pynput>=1.7.7
+pyautogui>=0.9.54
+mss>=10.0.0
+pytesseract>=0.3.13
+pyinstaller>=6.10.0
